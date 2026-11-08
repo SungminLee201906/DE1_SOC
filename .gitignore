@@ -1,0 +1,41 @@
+# Quartus build output
+db/
+incremental_db/
+output_files/
+simulation/
+c5_pin_model_dump.txt
+
+# Quartus generated files
+*.rpt
+*.summary
+*.smsg
+*.done
+*.jdi
+*.pin
+*.sof
+*.pof
+*.qws
+*.qarlog
+*.bak
+*.sld
+*.ddb
+*.cdf
+*_assignment_defaults.qdf
+qar_info.json
+.qsys_edit/
+hps_isw_handoff/
+greybox_tmp/
+
+# ModelSim / simulation
+work/
+transcript
+vsim.wlf
+*.wlf
+modelsim.ini
+*.vcd
+
+# OS / editor
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
