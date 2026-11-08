@@ -43,12 +43,12 @@ set_global_assignment -name TOP_LEVEL_ENTITY async_FIFO
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 16.1.2
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "20:26:09  FEBRUARY 28, 2026"
 set_global_assignment -name LAST_QUARTUS_VERSION "16.1.2 Lite Edition"
-set_global_assignment -name SYSTEMVERILOG_FILE write_pointer.sv
-set_global_assignment -name SYSTEMVERILOG_FILE ynchronizer.sv
-set_global_assignment -name SYSTEMVERILOG_FILE read_pointer.sv
-set_global_assignment -name SYSTEMVERILOG_FILE asynch_FIFO_mem.sv
+set_global_assignment -name SYSTEMVERILOG_FILE RTL/write_pointer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE RTL/synchronizer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE RTL/read_pointer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE RTL/asynch_FIFO_mem.sv
+set_global_assignment -name SYSTEMVERILOG_FILE RTL/async_FIFO.sv
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
-set_global_assignment -name SYSTEMVERILOG_FILE async_FIFO.sv
