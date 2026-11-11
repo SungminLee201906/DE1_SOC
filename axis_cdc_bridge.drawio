@@ -1,0 +1,102 @@
+<mxfile host="65bd71144e">
+    <diagram id="yUM8lAqd9BEIxgdaf8mR" name="Page-1">
+        <mxGraphModel dx="606" dy="529" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="bg" parent="1" style="rounded=0;fillColor=#ffffff;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="320" width="1300" y="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="wrdom" parent="1" style="rounded=0;fillColor=#f5f9ff;strokeColor=#6c8ebf;dashed=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fontColor=#1a4a8a" value="wr_clk " vertex="1">
+                    <mxGeometry height="240" width="540" x="20" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="rddom" parent="1" style="rounded=0;fillColor=#fff9f2;strokeColor=#d79b00;dashed=1;verticalAlign=top;align=center;spacingLeft=8;fontStyle=1;fontColor=#8a5a00" value="rd_clk " vertex="1">
+                    <mxGeometry height="240" width="660" x="600" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen" parent="1" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf" value="LFSR generator" vertex="1">
+                    <mxGeometry height="70" width="110" x="40" y="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="ska" parent="1" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf" value="Skid buffer " vertex="1">
+                    <mxGeometry height="70" width="100" x="190" y="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="fw" parent="1" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf" value="Async FiFO Write" vertex="1">
+                    <mxGeometry height="110" width="200" x="330" y="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="fr" parent="1" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00" value="Async FIFO Read" vertex="1">
+                    <mxGeometry height="110" width="200" x="630" y="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="skb" parent="1" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00" value="Skid buffer " vertex="1">
+                    <mxGeometry height="70" width="100" x="870" y="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="chk" parent="1" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00" value="LFSR checker" vertex="1">
+                    <mxGeometry height="70" width="110" x="1010" y="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" edge="1" parent="1" source="gen" style="shape=flexArrow;width=10;endWidth=10;endSize=5;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1a4a8a;fontSize=9" target="ska" value="tdata&#xa;tvalid&#xa;tready">
+                    <mxGeometry relative="1" y="-25" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="hhhXgzKmPXBKbMyVcOrY-1" edge="1" parent="1" style="shape=flexArrow;width=10;endWidth=10;endSize=5;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1a4a8a;fontSize=9" value="tdata&#xa;tvalid&#xa;tready">
+                    <mxGeometry relative="1" y="-25" as="geometry">
+                        <mxPoint as="offset"/>
+                        <mxPoint x="290" y="144.5" as="sourcePoint"/>
+                        <mxPoint x="330" y="144.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e3" edge="1" parent="1" source="fr" style="shape=flexArrow;width=10;endWidth=10;endSize=5;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a5a00;fontSize=9" target="skb" value="tdata&#xa;tvalid&#xa;tready">
+                    <mxGeometry relative="1" y="-25" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e4" edge="1" parent="1" source="skb" style="shape=flexArrow;width=10;endWidth=10;endSize=5;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a5a00;fontSize=9" target="chk" value="tdata&#xa;tvalid&#xa;tready">
+                    <mxGeometry relative="1" y="-25" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c1" edge="1" parent="1" source="fw" style="endArrow=classic;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#1a4a8a;fontSize=9;exitX=1;exitY=0.25;entryX=0;entryY=0.25" target="fr" value="Gray wptr → 2-FF sync">
+                    <mxGeometry relative="1" y="-12" as="geometry">
+                        <mxPoint y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c2" edge="1" parent="1" source="fr" style="endArrow=classic;strokeColor=#d79b00;strokeWidth=2;fontColor=#8a5a00;fontSize=9;exitX=0;exitY=0.75;entryX=1;entryY=0.75" target="fw" value="Gray rptr → 2-FF sync">
+                    <mxGeometry relative="1" y="8" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="gctl" parent="1" style="text;fontSize=9;align=center;fontColor=#1a4a8a" value="gen_clear&#xa;gen_enable&#xa;gen_seed&#xa;gen_throttle" vertex="1">
+                    <mxGeometry height="40" width="70" x="60" y="205" as="geometry"/>
+                </mxCell>
+                <mxCell id="gst" parent="1" style="text;fontSize=9;align=center;fontColor=#1a4a8a" value="sent_count" vertex="1">
+                    <mxGeometry height="20" width="60" x="65" y="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="cctl" parent="1" style="text;fontSize=9;align=center;fontColor=#8a5a00" value="chk_clear&#xa;chk_enable&#xa;chk_seed&#xa;chk_throttle" vertex="1">
+                    <mxGeometry height="40" width="70" x="1030" y="205" as="geometry"/>
+                </mxCell>
+                <mxCell id="cst" parent="1" style="text;fontSize=9;align=center;fontColor=#8a5a00" value="word_count&#xa;err_count&#xa;error_seen" vertex="1">
+                    <mxGeometry height="40" width="60" x="1190" y="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="gin" edge="1" parent="1" source="gctl" style="endArrow=classic;dashed=1;strokeColor=#6c8ebf;exitX=0.5;exitY=0;entryX=0.5;entryY=1" target="gen" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cin" edge="1" parent="1" source="cctl" style="endArrow=classic;dashed=1;strokeColor=#d79b00;exitX=0.5;exitY=0;entryX=0.5;entryY=1" target="chk" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cout" edge="1" parent="1" source="chk" style="endArrow=classic;dashed=1;strokeColor=#d79b00;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1170" y="130" as="sourcePoint"/>
+                        <mxPoint x="1190" y="145" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lg1" edge="1" parent="1" style="shape=flexArrow;width=10;endWidth=10;endSize=5;fillColor=#eeeeee;strokeColor=#333333">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="40" y="310" as="sourcePoint"/>
+                        <mxPoint x="90" y="310" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lg1t" parent="1" style="text;fontSize=10;align=left" value="AXI-Stream link " vertex="1">
+                    <mxGeometry height="20" width="220" x="100" y="300" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
