@@ -2,7 +2,7 @@ module skid_buffer #(
   parameter WIDTH = 8
 )(
   input  logic             clk,
-  input  logic             rst,          // active high, synchronous
+  input  logic             rst,          // active high, asynchronous reset, syncronous release
 
   // slave side (data in)
   input  logic [WIDTH-1:0] s_tdata,
@@ -21,7 +21,7 @@ module skid_buffer #(
   // Registered ready: depends only on a flip-flop, never on m_tready
   assign s_tready = !skid_valid;
 
-  always_ff @(posedge clk) begin
+  always_ff @(posedge clk or posedge rst) begin
     if (rst) begin
       m_tvalid   <= 1'b0;
       skid_valid <= 1'b0;
