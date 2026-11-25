@@ -4,7 +4,7 @@ module axis_cdc_bridge_tb;
 
   logic        wr_clk = 0, rd_clk = 0;
   logic        wr_rst = 1, rd_rst = 1;
-  logic        gen_clear = 0, gen_enable = 0;
+  logic        gen_clear = 0, gen_enable = 0, gen_inject = 0;
   logic        chk_clear = 0, chk_enable = 0;
   logic [7:0]  gen_seed = 8'hA5, chk_seed = 8'hA5;
   logic [7:0]  gen_throttle = 0, chk_throttle = 0;
@@ -49,11 +49,67 @@ module axis_cdc_bridge_tb;
     $display("%s: %0d words, %0d errors", name, word_count, err_count);
   endtask
 
+    // Stop the generator and give the pipe time to empty
+  task automatic drain();
+    gen_enable <= 0;
+    repeat (2000) @(posedge rd_clk);
+  endtask
+
+  // N inject pulses must give exactly N errors (high chk_throttle forces stalls)
+  task automatic inject_phase(input int n);
+    reset_all();
+    gen_throttle <= 8'd64;
+    chk_throttle <= 8'd200;
+    @(posedge rd_clk); chk_enable <= 1;
+    repeat (3) @(posedge wr_clk);
+    gen_enable <= 1;
+    for (int i = 0; i < n; i++) begin
+      repeat (50) @(posedge wr_clk);
+      gen_inject <= 1;
+      @(posedge wr_clk);
+      gen_inject <= 0;
+    end
+    repeat (50) @(posedge wr_clk);
+    drain();
+    check(word_count == sent_count, "inject: word count mismatch");
+    check(err_count == n,           $sformatf("inject: expected %0d errors, got %0d", n, err_count));
+    check(error_seen == 1,          "inject: error_seen should be set");
+    $display("inject: %0d words, %0d errors (expected %0d)", word_count, err_count, n);
+  endtask
+
+  // Counter clear zeroes the counts; LFSRs keep running, so later words still check clean
+  task automatic clear_phase();
+    reset_all();
+    gen_throttle <= 0;
+    chk_throttle <= 0;
+    @(posedge rd_clk); chk_enable <= 1;
+    repeat (3) @(posedge wr_clk);
+    gen_enable <= 1;
+    wait (word_count >= 300);
+    drain();
+    @(posedge wr_clk); gen_clear <= 1;
+    @(posedge wr_clk); gen_clear <= 0;
+    @(posedge rd_clk); chk_clear <= 1;
+    @(posedge rd_clk); chk_clear <= 0;
+    repeat (4) @(posedge rd_clk);
+    check(sent_count == 0 && word_count == 0 && err_count == 0, "clear: counters not zero");
+    gen_enable <= 1;
+    wait (word_count >= 300);
+    drain();
+    check(err_count == 0,           "clear: errors after counter clear");
+    check(word_count == sent_count, "clear: word count mismatch");
+    $display("clear: %0d words after clear, %0d errors", word_count, err_count);
+  endtask
+
+
   initial begin
     run_phase("full speed",  8'd0,   8'd0,   1000);
     run_phase("slow reader", 8'd0,   8'd200, 500);   // FIFO fills up
     run_phase("slow writer", 8'd200, 8'd0,   500);   // FIFO runs near empty
     run_phase("both random", 8'd128, 8'd128, 1000);
+    inject_phase(5);
+    clear_phase();
+
 
     if (errors == 0) $display("PASS: bridge carried every word in order");
     else             $display("FAIL: %0d check(s) failed", errors);

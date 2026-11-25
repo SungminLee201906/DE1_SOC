@@ -8,6 +8,8 @@ module axis_cdc_bridge #(
   input  logic        gen_enable,
   input  logic [7:0]  gen_seed,
   input  logic [7:0]  gen_throttle,
+  input  logic        gen_inject,
+
   output logic [31:0] sent_count,
 
   // ---- read clock domain: checker side ----
@@ -17,6 +19,7 @@ module axis_cdc_bridge #(
   input  logic        chk_enable,
   input  logic [7:0]  chk_seed,
   input  logic [7:0]  chk_throttle,
+  
   output logic [31:0] word_count,
   output logic [31:0] err_count,
   output logic        error_seen
@@ -41,7 +44,8 @@ module axis_cdc_bridge #(
     .m_tdata    (g_tdata),
     .m_tvalid   (g_tvalid),
     .m_tready   (g_tready),
-    .sent_count (sent_count)
+    .sent_count (sent_count),
+    .inject     (gen_inject)
   );
 
   skid_buffer #(.WIDTH(8)) skid_in (

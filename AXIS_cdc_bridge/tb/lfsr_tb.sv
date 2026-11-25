@@ -21,6 +21,7 @@ module lfsr_tb;
     .m_tdata    (g_tdata),
     .m_tvalid   (g_tvalid),
     .m_tready   (c_tready),
+    .inject     (1'b0),
     .sent_count
   );
 
