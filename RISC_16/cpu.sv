@@ -14,20 +14,24 @@ output [7:0] write_addr;
 output [7:0] read_addr;
 output enable;
 
-reg [15:0] IR_out;
-wire write,loads,loadb,asel,bsel,loadc,loada;
-wire [1:0] vsel;
-wire[2:0] readnum;
-wire[2:0] writenum;
-wire[1:0] shift;
-wire[1:0] ALUop;
+reg  [15:0] IR_out;
+reg  [8:0]  PC;                 // program counter (declared before use)
+wire write, loads, loadb, asel, bsel, loadc, loada;
+wire [1:0]  vsel;
+wire [2:0]  readnum;
+wire [2:0]  writenum;
+wire [1:0]  shift;
+wire [1:0]  ALUop;
 wire [15:0] mdata;
 wire [15:0] sximm8;
 wire [15:0] sximm5;
-wire[2:0] nsel;
-wire [2:0] opcode;
-wire [1:0] op;
-wire load_ir;
+wire [2:0]  nsel;
+wire [2:0]  opcode;
+wire [1:0]  op;
+wire        load_ir;
+wire        reset_pc, load_pc, addr_sel, load_addr;   // controller outputs (were implicit 1-bit wires)
+wire [1:0]  mem_cmd;                                  // must be 2 bits for MREAD / MWRITE / MNONE
+
 
 
 always_ff @(posedge clk) begin
@@ -44,13 +48,15 @@ controller CL(clk, reset, w, opcode, op, loada, loadb, loadc, nsel, write, asel,
 
 decoder DECODER(IR_out, ALUop, sximm5, sximm8, shift, readnum, writenum, nsel, opcode, op);
 
-reg mwrite;
-reg [15:0] write_data;
+assign write_data = out;        // STR data and LDR/STR address come from the datapath output (C)
+assign mdata      = read_data;  // LDR: memory data into the register file
+
 reg [8:0] mem_addr;
 reg [8:0] next_pc;
-reg c1,c2,msel; //c1 is the comparator result for read and c2 is for write
-reg [8:0] data_address; //data address register
+reg c1,c2,msel; 					//c1 is the comparator result for read and c2 is for write
+reg [8:0] data_address; 			//data address register
 reg [8:0] data_address_in;
+
 
 //reset pc multiplexer
 assign next_pc=reset_pc? 9'b000000000: PC+1;

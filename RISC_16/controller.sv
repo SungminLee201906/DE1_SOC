@@ -1,24 +1,24 @@
 //define all instructions
 `define Sw 4
-`define rst		4'b0000
-`define IF1		4'b0001 
-`define IF2 		4'b0010 
-`define S1 		4'b0011
-`define GetA 		4'b0100 
-`define GetB 		4'b0101
+`define rst				4'b0000
+`define IF1				4'b0001 
+`define IF2 			4'b0010 
+`define S1 				4'b0011
+`define GetA 			4'b0100 
+`define GetB 			4'b0101
 `define Computations 	4'b0110
-`define WriteReg 	4'b0111// final state go back to wait
-`define updatepc	4'b1000
-`define LDR1		4'b1001
-`define LDR2		4'b1010
-`define STR1		4'b1011
-`define STR2		4'b1100
-`define HALT		4'b1101
-`define dec		4'b1110
+`define WriteReg 		4'b0111// final state go back to wait
+`define updatepc		4'b1000
+`define LDR1			4'b1001
+`define LDR2			4'b1010
+`define STR1			4'b1011
+`define STR2			4'b1100
+`define HALT			4'b1101
+`define dec				4'b1110
 
-`define MREAD 		2'b00
-`define MWRITE 		2'b01
-`define MNONE 		2'b10
+`define MREAD 			2'b00
+`define MWRITE 			2'b01
+`define MNONE 			2'b10
 
 
 module controller(clk, reset, w, opcode, op, loada, loadb, loadc, nsel, write, asel, bsel, vsel, loads, reset_pc,load_pc,addr_sel, mem_cmd,load_ir,load_addr );
@@ -29,7 +29,10 @@ input [2:0] opcode;
 input [1:0] op;
 reg [23:0] next;
 
-output loada, loadb, loadc, write, asel, bsel, vsel, loads, w,addr_sel,load_addr;
+output loada, loadb, loadc, write, asel, bsel, loads, w, load_addr;
+output [1:0] vsel;
+
+
 output reg [2:0] nsel;
 //lab 7 addiiton
 output reset_pc,load_pc,addr_sel,load_ir;
@@ -118,11 +121,13 @@ always@(*) begin
 		{`Computations,3'b100,2'b00,1'b0} : next = {`STR1,1'b0, 1'b0, 1'b0, 3'b001, 1'b0, 1'b0, 1'b1, 2'b01, 1'b0,1'b0,1'b0,1'b0,1'b0,`MNONE,1'b0,1'b1}; //set load_addr=1
 		{`STR1,3'b100,2'b00,1'b0} : next = {`STR2,1'b0, 1'b1, 1'b1, 3'b010, 1'b0, 1'b0, 1'b1, 2'b01, 1'b0,1'b0,1'b0,1'b0,1'b0,`MWRITE,1'b0,1'b0}; //get b value and loadc
 		{`STR2,3'b100,2'b00,1'b0} : next = {`IF1, 1'b0, 1'b0, 1'b0, 3'b000, 1'b0, 1'b0, 1'b0, 2'b00, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, `MREAD, 1'b0,1'b0};
+		{`HALT,3'bxxx,2'bxx,1'b0} : next = {`HALT, 1'b0,1'b0,1'b0,3'b000,1'b0,1'b0,1'b0,2'b00,1'b0,1'b1,1'b0,1'b0,1'b0,`MNONE,1'b0,1'b0}; // stay halted until reset
 
 		//HALT instruction
 		{`updatepc,3'b111,2'bxx,1'b0} : next = {`HALT, 1'b0,1'b0,1'b0,3'b000,1'b0,1'b0,1'b0,2'b00,1'b0,1'b1,1'b0,1'b0,1'b0,`MNONE,1'b0,1'b0};
 
-		default: next = {`rst, 1'b0, 1'b0, 1'b0, 3'b000, 1'b0, 1'b0, 1'b0, 2'b00, 1'b0, 1'b1, 1'b1, 1'b1, 1'b0, `MNONE, 1'b0};
+				default: next = {`rst, 1'b0, 1'b0, 1'b0, 3'b000, 1'b0, 1'b0, 1'b0, 2'b00, 1'b0, 1'b1, 1'b1, 1'b1, 1'b0, `MNONE, 1'b0, 1'b0};
+
 	endcase
 end
 

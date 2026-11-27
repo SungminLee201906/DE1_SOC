@@ -1,19 +1,27 @@
 # ---- DE1-SoC helpers: run from a project folder (e.g. C:\DE1_SOC\AXIS_cdc_bridge) ----
 $QUARTUS = "C:\intelFPGA_lite\18.1\quartus\bin64"
-
 function _proj { (Get-Item .).Name }                       # default project name = folder name
 function _lib  { if (!(Test-Path logs\work)) { vlib logs/work | Out-Null } }
 
-# Lint all RTL
-function qlint {
+
+function _proj { (Get-Item .).Name }                       # default project name = folder name
+function _lib  { if (!(Test-Path logs\work)) { New-Item -ItemType Directory -Force logs | Out-Null; vlib logs/work | Out-Null } }
+
+
+# Source files: RTL\*.sv if the folder exists, otherwise *.sv in the project folder
+function _src { if (Test-Path RTL) { (Get-ChildItem RTL\*.sv).FullName } else { (Get-ChildItem *.sv).FullName } }
+
+# Lint all RTL, or one file: qlint cpu.sv   (output also saved to logs\lint.log)
+function qlint([string]$file) {
     _lib
-    vlog -work logs/work -sv (Get-ChildItem RTL\*.sv).FullName
+    if ($file) { $files = $file } else { $files = _src }
+    vlog -work logs/work -sv $files | Tee-Object -FilePath logs\lint.log
 }
 
 # Run a testbench. Terminal by default; add -gui for ModelSim with waves.
 function run_test([string]$tb = "axis_cdc_bridge_tb", [switch]$gui) {
     _lib
-    vlog -work logs/work -sv (Get-ChildItem RTL\*.sv).FullName "tb\$tb.sv"
+    vlog -work logs/work -sv (_src) "tb\$tb.sv"
     if ($LASTEXITCODE -ne 0) { return }
     if ($gui) { vsim -lib logs/work -voptargs="+acc" $tb -do "onfinish stop; add wave -r /$tb/*; run -all" }
     else      { vsim -c -lib logs/work $tb -do "run -all; quit -f" }

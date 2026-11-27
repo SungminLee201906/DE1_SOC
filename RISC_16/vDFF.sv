@@ -7,5 +7,5 @@ output [n-1:0] out;
 reg [n-1:0] out;
 
 always_ff @(posedge clk)
-	out=in;
+	out <= in;
 endmodule

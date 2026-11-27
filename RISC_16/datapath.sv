@@ -46,7 +46,7 @@ always_comb begin
 	case(vsel)
 		2'b00 : data_in=c_out;
 		2'b01 : data_in=sximm8;
-		2'b10 : data_in={8'b0,pc};
+		2'b10 : data_in={7'b0,pc};
 		2'b11 : data_in=mdata;
 	endcase
 end
@@ -92,4 +92,4 @@ assign datapath_out=c_out;
 
 
 
-endmodule
+endmodule
