@@ -44,3 +44,6 @@ desktop.ini
 #claude.md
 
 CLAUDE.md
+
+*.drawio
+*.png
