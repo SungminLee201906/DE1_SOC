@@ -2,7 +2,7 @@
 
 A 16-bit RISC CPU (Simple RISC Machine style) built from a datapath, a register file, an ALU, a shifter, an instruction decoder and a finite-state-machine controller, with a 512 × 16-bit RAM holding both program and data.
 
-![alt text](../../RISC.png)
+![RISC-16 CPU block diagram](../RISC.png)
 
 ## Files
 
